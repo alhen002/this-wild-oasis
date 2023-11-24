@@ -1,17 +1,19 @@
 import { useForm } from "react-hook-form";
-
 import Input from "../../ui/Input";
 import Form from "../../ui/Form.jsx";
 import Button from "../../ui/Button.jsx";
 import FileInput from "../../ui/FileInput.jsx";
 import Textarea from "../../ui/Textarea.jsx";
-
 import FormRow from "../../ui/FormRow.jsx";
 import useCreateCabin from "./useCreateCabin.js";
 import useEditCabin from "./useEditCabin.js";
+import { useContext } from "react";
+import { ModalContext } from "../../ui/Modal.jsx";
 
 function CreateCabinForm({ cabinToEdit = {} }) {
   const { id: editId, ...editValues } = cabinToEdit;
+  const { close } = useContext(ModalContext);
+
   const isEditSession = Boolean(editId);
   const { register, handleSubmit, reset, getValues, formState } = useForm({
     defaultValues: isEditSession ? editValues : {},
@@ -42,6 +44,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         {
           onSuccess: (data) => {
             console.log(data);
+            close();
             reset();
           },
         },
@@ -133,7 +136,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" onClick={close}>
           Cancel
         </Button>
         <Button disabled={isWorking}>
